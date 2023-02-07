@@ -1,12 +1,10 @@
 package inputs;
 
 import gamestates.GameStates;
-import main.Game;
 import main.GamePanel;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import static utilz.constants.Directions.*;
 
 public class KeyboardInputs implements KeyListener {
 

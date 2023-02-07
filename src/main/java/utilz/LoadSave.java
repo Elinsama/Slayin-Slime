@@ -8,7 +8,7 @@ import java.io.InputStream;
 public class LoadSave {
 
     public static final String PLAYER_ATLAS = "Graphics/Spritesheets/Player/Sheets/allAnims1.png";
-    public static final String LEVEL_ATLAS = "Graphics/Tileset/SeasonalTilesets/WinterWorld/Terrain16x16.png";
+    public static final String ENEMY_ATLAS = "Graphics/Spritesheets/Enemies/Octi/Idle_Movement16x16.png";
     public static BufferedImage GetSprteAltlas(String filname){
         BufferedImage img = null;
         InputStream is = LoadSave.class.getResourceAsStream("/" + filname);

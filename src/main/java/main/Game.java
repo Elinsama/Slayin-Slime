@@ -1,16 +1,13 @@
 package main;
 
-import entities.Player;
 import gamestates.GameStates;
 import gamestates.Menu;
 import gamestates.Playing;
-import levels.LevelManager;
 
 import java.awt.Graphics;
 
-public class Game implements Runnable{
+public class Game implements Runnable {
 
-    private GameScreen gamescreen;
     private GamePanel gamePanel;
     private Thread gameThreat;
     private final int FPS_SET = 120;
@@ -20,36 +17,35 @@ public class Game implements Runnable{
     private Menu menu;
 
 
-    public final static int TILES_DEFAULT_SIZE = 30;
-    public final static float SCALE =  4.0f;
-    public final static int TILES_WIDTH = 16;
-    public final static int TILES_HEIGHT = 16;
-    public final static int TILE_SIZE = (int)(TILES_DEFAULT_SIZE * SCALE);
+    public final static int TILES_DEFAULT_SIZE = 16;
+    public final static float SCALE = 2.0f;
+    public final static int TILES_WIDTH = 40;
+    public final static int TILES_HEIGHT = 25;
+    public final static int TILE_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
     public final static int GAME_WIDTH = TILE_SIZE * TILES_WIDTH;
     public final static int GAME_HEIGHT = TILE_SIZE * TILES_HEIGHT;
-    public Game(){
-        initclasses();
+
+    public Game() {
+        initClasses();
         gamePanel = new GamePanel(this);
-        gamescreen = new GameScreen(gamePanel);
+        new GameScreen(gamePanel);
         gamePanel.requestFocus();
 
         startGameLoop();
     }
 
-    private void initclasses(){
+    private void initClasses() {
         menu = new Menu(this);
         playing = new Playing(this);
     }
-    private void startGameLoop(){
+
+    private void startGameLoop() {
         gameThreat = new Thread(this);
         gameThreat.start();
     }
 
-    public void update(){
-
-
-        switch (GameStates.state){
-
+    public void update() {
+        switch (GameStates.state) {
             case PLAYING:
                 playing.update();
                 break;
@@ -60,11 +56,11 @@ public class Game implements Runnable{
                 break;
         }
     }
-    protected void render(Graphics g){
 
-        switch (GameStates.state){
-
+    protected void render(Graphics g) {
+        switch (GameStates.state) {
             case PLAYING:
+            case GAME_OVER:
                 playing.draw(g);
                 break;
             case MENU:
@@ -89,7 +85,7 @@ public class Game implements Runnable{
         int updates = 0;
         long lastCheck = System.currentTimeMillis();
 
-        while (true){
+        while (true) {
             long currentTime = System.nanoTime();
 
             deltaU += (currentTime - previousTime) / timePerUpdate;

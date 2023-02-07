@@ -5,34 +5,35 @@ import org.mapeditor.core.ObjectGroup;
 import utilz.LoadSave;
 
 import static utilz.IsSolid.IsEntityOnFloor;
-import static utilz.constants.PlayerConstants.*;
+import static utilz.Constants.PlayerConstants.*;
 import static utilz.IsSolid.canMoveHere;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+/**
+ * Renders an entity that represents the player and transitions between animations states.
+ * Holds the state for position and speed
+ */
 public class Player extends Entity {
     private BufferedImage[][] animations;
     private int aniTick, aniIndex, aniSpeed = 20;
     private int playerAction = IDLE;
     private boolean moving = false;
     private boolean left, up, right, down, jump;
-    private float playerSpeed = 1f;
-    private ObjectGroup levelBounds;
+    private float playerSpeed = 2f;
+
     private float airSpeed = 0f;
-    private float gravity = 0.04f * Game.SCALE;
-    private float jumpSpeed = -1.5f * Game.SCALE;
-    private float collisionSpeedFall = 0.5f * Game.SCALE;
+    private float jumpSpeed = -1.7f * Game.SCALE;
     private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
-    private boolean inAir = true;
 
     private float xDrawOffset = 8 * Game.SCALE;
     private float yDrawOffset = 5 * Game.SCALE;
 
     public Player(float x, float y, int width, int height, ObjectGroup levelBounds) {
-        super(x, y,width,height);
-        this.levelBounds = levelBounds;
+        super(x, y, width, height, levelBounds);
         loadAnimations();
-        initHitbox(x, y,16 * Game.SCALE,15 * Game.SCALE);
+        initHitbox(x, y, 16 * Game.SCALE, 15 * Game.SCALE);
     }
 
     public void update() {
@@ -51,10 +52,9 @@ public class Player extends Entity {
         if (aniTick >= aniSpeed) {
             aniTick = 0;
             aniIndex++;
-            if (aniIndex >= GetSpriteAmount(playerAction)) {
+            if (aniIndex >= getSpriteAmount(playerAction)) {
                 aniIndex = 0;
             }
-
         }
     }
 
@@ -127,20 +127,15 @@ public class Player extends Entity {
 
     }
 
-    private void updateXPos(float xSpeed) {
-        if (canMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, levelBounds)) {
-            hitbox.x += xSpeed;
-        }
-    }
 
     private void loadAnimations() {
 
-            BufferedImage img = LoadSave.GetSprteAltlas(LoadSave.PLAYER_ATLAS);
+        BufferedImage img = LoadSave.GetSprteAltlas(LoadSave.PLAYER_ATLAS);
 
-            animations = new BufferedImage[4][12];
-            for (int j = 0; j < animations.length-1; j++)
-                for (int i = 0; i < animations[j].length-1; i++)
-                    animations[j][i] = img.getSubimage(i * 32, j * 32, 32, 32);
+        animations = new BufferedImage[4][12];
+        for (int j = 0; j < animations.length - 1; j++)
+            for (int i = 0; i < animations[j].length - 1; i++)
+                animations[j][i] = img.getSubimage(i * 32, j * 32, 32, 32);
 
     }
 

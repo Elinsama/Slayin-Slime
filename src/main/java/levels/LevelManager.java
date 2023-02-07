@@ -1,52 +1,88 @@
 package levels;
 
-import main.Game;
+import entities.Enemy;
+import gamestates.GameStates;
 import org.mapeditor.core.*;
 import org.mapeditor.io.TMXMapReader;
-import static main.Game.SCALE;
-
 
 import java.awt.*;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
 
+import static main.Game.*;
+
+/**
+ * The LevelManager loads the Tiled map and draws it on screen.
+ * we also use object layers in the map for collisions and enemy placement.
+ */
 public class LevelManager {
 
     private Map map;
+    private List<Enemy> enemies = new ArrayList<>();
+    private Point2D.Float spawnPoint;
+    private Point2D.Float endPoint;
 
-    public LevelManager(String mapName){
-        importWinterSrites(mapName);
+    public LevelManager(String mapName) {
+        readMap(mapName);
     }
 
-    private void importWinterSrites(String mapName) {
+    private void readMap(String mapName) {
         try {
             TMXMapReader reader = new TMXMapReader();
             map = reader.readMap(getClass().getResource(mapName));
+            final ObjectGroup assets = (ObjectGroup) map.getLayers().stream().filter((l) -> "assets".equals(l.getName())).findFirst().orElseThrow();
+            for (MapObject asset : assets) {
+                if ("enemy".equals(asset.getName())) {
+                    enemies.add(new Enemy((float) asset.getX() * SCALE, (float) asset.getY() * SCALE, 16, 16, getLevelBounds()));
+                }
+
+                if ("start".equals(asset.getName())) {
+                    spawnPoint = new Point2D.Float((float) asset.getX() * SCALE, (float) asset.getY() * SCALE);
+                }
+
+                if ("end".equals(asset.getName())) {
+                    endPoint = new Point2D.Float((float) asset.getX() * SCALE, (float) asset.getY() * SCALE);
+                }
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void draw(Graphics g){
+    public void draw(Graphics g) {
         List<MapLayer> layers = map.getLayers();
-        for (MapLayer layer: layers) {
-            if (layer instanceof TileLayer){
-            renderLayer(g, (TileLayer)layer);
-            }
-            else {
-                for (MapObject obj: ((ObjectGroup)layer).getObjects()){
-                    g.drawRect((int) (obj.getX()*SCALE),(int) (obj.getY()*SCALE+45), (int) (obj.getWidth()*SCALE), (int)(obj.getHeight()*SCALE));
-                }
+        for (MapLayer layer : layers) {
+            if (layer instanceof TileLayer) {
+                renderLayer(g, (TileLayer) layer);
             }
         }
 
+        for (Enemy enemy : enemies) {
+            enemy.render(g);
+        }
+
+        if (GameStates.isDebug) {
+            debugPaintCollisionBox(g);
+        }
+    }
+
+    private void debugPaintCollisionBox(Graphics g) {
+        List<MapLayer> layers = map.getLayers();
+        for (MapLayer layer : layers) {
+            if (layer instanceof ObjectGroup) {
+                for (MapObject obj : ((ObjectGroup) layer).getObjects()) {
+                    g.drawRect((int) (obj.getX() * SCALE), (int) (obj.getY() * SCALE), (int) (obj.getWidth() * SCALE), (int) (obj.getHeight() * SCALE));
+                }
+            }
+        }
     }
 
     private void renderLayer(Graphics g, TileLayer layer) {
         final Rectangle clip = g.getClipBounds();
-        final int tileWidth = (int) (map.getTileWidth()*SCALE);
-        final int tileHeight = (int) (map.getTileHeight()*SCALE);
+        final int tileWidth = TILE_SIZE;
+        final int tileHeight = TILE_SIZE;
         final Rectangle bounds = layer.getBounds();
 
         g.translate(bounds.x * tileWidth, bounds.y * tileHeight);
@@ -72,7 +108,7 @@ public class LevelManager {
                     continue;
                 }
 
-                Point drawLoc = new Point(x * tileWidth, (int) ((y + 1) * tileHeight - image.getHeight(null)));
+                Point drawLoc = new Point(x * tileWidth, y * tileHeight);
 
                 // Add offset from tile layer property
                 drawLoc.x += layer.getOffsetX() != null ? layer.getOffsetX() : 0;
@@ -82,17 +118,32 @@ public class LevelManager {
                 drawLoc.x += tile.getTileSet().getTileoffset() != null ? tile.getTileSet().getTileoffset().getX() : 0;
                 drawLoc.y += tile.getTileSet().getTileoffset() != null ? tile.getTileSet().getTileoffset().getY() : 0;
 
-                g.drawImage(image, drawLoc.x, drawLoc.y, (int) (16*SCALE), (int) (16*SCALE),null);
+                g.drawImage(image, drawLoc.x, drawLoc.y, TILE_SIZE, TILE_SIZE, null);
             }
         }
 
         g.translate(-bounds.x * tileWidth, -bounds.y * tileHeight);
     }
 
-    public void update(){
-
+    public void update() {
+        for (Enemy enemy : enemies) {
+            enemy.update();
+        }
     }
-    public ObjectGroup getLevelBounds(){
+
+    public ObjectGroup getLevelBounds() {
         return (ObjectGroup) map.getLayer(map.getLayerCount() - 1);
+    }
+
+    public Point2D.Float getSpawnPoint() {
+        return spawnPoint;
+    }
+
+    public Point2D.Float getEndPoint() {
+        return endPoint;
+    }
+
+    public List<Enemy> getEnemies() {
+        return enemies;
     }
 }
