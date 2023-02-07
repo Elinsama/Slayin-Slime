@@ -5,6 +5,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * A sprite loader
+ */
 public class LoadSave {
 
     public static final String PLAYER_ATLAS = "Graphics/Spritesheets/Player/Sheets/allAnims1.png";

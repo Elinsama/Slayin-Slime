@@ -6,6 +6,9 @@ import gamestates.Playing;
 
 import java.awt.Graphics;
 
+/**
+ * The runnable game that holds all states.
+ */
 public class Game implements Runnable {
 
     private GamePanel gamePanel;

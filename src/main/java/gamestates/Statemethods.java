@@ -4,6 +4,9 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+/**
+ * All states must adhere / implement these methods
+ */
 public interface Statemethods {
     public void update();
 

@@ -8,6 +8,10 @@ import java.util.stream.Collectors;
 
 import static main.Game.*;
 
+/**
+ * Helper methods to see if we can move to a specific location.
+ * See it our hitbox intersects with any of the level bounds
+ */
 public class IsSolid {
 
     public static boolean canMoveHere(float x, float y, float width, float height, ObjectGroup levelBounds) {

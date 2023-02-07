@@ -1,7 +1,10 @@
 package main;
 
 import javax.swing.*;
-;
+
+/**
+ * A holder for the JFrame.
+ */
 public class GameScreen {
     private JFrame jframe;
     public GameScreen(GamePanel gamePanel){

@@ -1,6 +1,5 @@
 package main;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import javax.swing.JPanel;
@@ -11,6 +10,9 @@ import inputs.MouseInputs;
 import static main.Game.GAME_WIDTH;
 import static main.Game.GAME_HEIGHT;
 
+/**
+ * A JPanel that gives so that we can paint using Graphics.
+ */
 public class GamePanel extends JPanel {
     private Game game;
 
@@ -31,9 +33,7 @@ public class GamePanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-
         game.render(g);
-
     }
 
     public Game getGame() {

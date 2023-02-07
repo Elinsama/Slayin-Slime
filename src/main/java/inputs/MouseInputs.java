@@ -2,11 +2,13 @@ package inputs;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 import gamestates.GameStates;
 import main.GamePanel;
 
+/**
+ * MouseListener that delegates mouse events to the active state.
+ */
 public class MouseInputs implements MouseListener {
 
     private GamePanel gamePanel;
