@@ -1,44 +1,43 @@
 package levels;
 
 import main.Game;
-import org.mapeditor.core.Map;
-import org.mapeditor.core.MapLayer;
-import org.mapeditor.core.Tile;
-import org.mapeditor.core.TileLayer;
+import org.mapeditor.core.*;
 import org.mapeditor.io.TMXMapReader;
 import static main.Game.SCALE;
 
 
 import java.awt.*;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class LevelManager {
-    private Game game;
-    private BufferedImage[] levelSprite;
+
     private Map map;
 
-    public LevelManager(Game game){
-        this.game = game;
-        importWinterSrites();
+    public LevelManager(String mapName){
+        importWinterSrites(mapName);
     }
 
-    private void importWinterSrites() {
-
+    private void importWinterSrites(String mapName) {
         try {
             TMXMapReader reader = new TMXMapReader();
-            map = reader.readMap(getClass().getResource("/Graphics/Tileset/SeasonalTilesets/WinterWorld/wintermap1.tmx"));
+            map = reader.readMap(getClass().getResource(mapName));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     public void draw(Graphics g){
-//    new OrthogonalRenderer(map).paintTileLayer((Graphics2D) g, (TileLayer) map.getLayer(0));
         List<MapLayer> layers = map.getLayers();
         for (MapLayer layer: layers) {
             if (layer instanceof TileLayer){
             renderLayer(g, (TileLayer)layer);
+            }
+            else {
+                for (MapObject obj: ((ObjectGroup)layer).getObjects()){
+                    g.drawRect((int) (obj.getX()*SCALE),(int) (obj.getY()*SCALE+45), (int) (obj.getWidth()*SCALE), (int)(obj.getHeight()*SCALE));
+                }
             }
         }
 
@@ -92,5 +91,8 @@ public class LevelManager {
 
     public void update(){
 
+    }
+    public ObjectGroup getLevelBounds(){
+        return (ObjectGroup) map.getLayer(map.getLayerCount() - 1);
     }
 }
