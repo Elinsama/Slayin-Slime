@@ -28,5 +28,13 @@
         </dependency>
 
     </dependencies>
+    
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/edewit/Slayin-Slime</url>
+        </repository>
+    </distributionManagement>
 
 </project>
