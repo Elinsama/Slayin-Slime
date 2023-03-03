@@ -28,5 +28,5 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: target/slayin-slime-0.0.1-SNAPSHOT.jar
+        files: target/slayin-slime-*-jar-with-dependencies.jar
         token: ${{ github.token }}
