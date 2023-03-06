@@ -11,3 +11,20 @@ represent a wide range of identities and
 As you progress through the game, you'll not only be entertained by dazzling visuals, but you'll
 also be able to encounter important messages that promote acceptance and representation
 for the LGBTQ+ community.
+
+to run either dowload a release and start by either double click or with:
+```bash
+$> java -jar target/slayin-slime-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+```
+
+or build from source with :
+```bash
+$> mvn package
+```
+
+At the moment there are 2 levels to complete with one live, but there are more to come
+
+## Level one summer:
+![alt screenshot level one summer](/doc/img/level-one.png)
+## Level two autumn:
+![alt screenshot level two autumn](/doc/img/level-two.png)
